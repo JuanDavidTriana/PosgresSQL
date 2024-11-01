@@ -1,0 +1,55 @@
+-- Creating table for students
+CREATE TABLE estudiantes(
+    estudiantes_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+
+-- Creating table for courses
+CREATE TABLE cursos(
+    curso_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT
+);
+
+-- Creating table for enrollments
+CREATE TABLE inscripciones(
+    estudiante_id INT REFERENCES estudiantes(estudiante_id) ON DELETE CASCADE,
+    curso_id INT REFERENCES cursos(curso_id) ON DELETE CASCADE,
+    fecha_incripcion DATE DEFAULT CURRENT_DATE,
+    PRIMARY KEY (estudiante_id, curso_id)
+);
+
+-- Inserting data into students table
+INSERT INTO estudiantes (nombre, email)
+VALUES 
+    ('Juan','juan@gmail.com'),
+    ('Pedro','pedro@gmail.com'),
+    ('Maria','maria@gmail.com'),
+    ('Ana','ana@gmail.com'),
+    ('Luis','luis@gmail.com');
+
+-- Inserting data into courses table
+INSERT INTO cursos (nombre, descripcion)
+VALUES 
+    ('Matematica', 'Es el curso de matematica'),
+    ('Lengua', 'Es el curso de Lengua'),
+    ('Ciencias', 'Es el curso de Ciencias');
+
+-- Inserting data into enrollments table
+INSERT INTO inscripciones (estudiante_id, curso_id)
+VALUES 
+    (1,1), (1,2),
+    (2,1), (2,3),
+    (3,2), (3,3),
+    (4,1), (4,2), (4,3),
+    (5,1), (5,2), (5,3);
+
+-- Selecting students enrolled in Matematica
+
+SELECT e.nombre, e.email, c.nombre AS curso
+FROM inscripciones i
+INNER JOIN estudiantes e ON i.estudiante_id = e.estudiante_id
+INNER JOIN cursos c ON i.curso_id = c.curso_id
+WHERE c.nombre = 'Matematica';
+
